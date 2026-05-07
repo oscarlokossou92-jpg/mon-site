@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cœur de Chat — Nous retrouvons votre chat en toute sécurité 🐾</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #E8F4FD;
+  --blue: #2A7CC7;
+  --blue-dark: #1A5FA0;
+  --blue-light: #5BA4D8;
+  --mint: #E6F7F2;
+  --green: #2EAE82;
+  --green-dark: #1E8A65;
+  --white: #FFFFFF;
+  --cream: #FAFBFC;
+  --text: #1A2B3C;
+  --text-light: #4A6177;
+  --text-muted: #7A92A7;
+  --border: #D8E8F4;
+  --shadow: 0 4px 30px rgba(42,124,199,0.10);
+  --shadow-lg: 0 16px 60px rgba(42,124,199,0.18);
+  --radius: 18px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'DM Sans',sans-serif; color:var(--text); background:var(--white); overflow-x:hidden; }
+
+/* NAVBAR */
+nav { position:fixed; top:0; width:100%; z-index:100; background:rgba(255,255,255,0.94); backdrop-filter:blur(18px); border-bottom:1px solid var(--border); padding:0 5%; display:flex; align-items:center; justify-content:space-between; height:70px; transition:box-shadow .3s; }
+nav.scrolled { box-shadow:var(--shadow); }
+.nav-logo { display:flex; align-items:center; gap:8px; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--blue-dark); text-decoration:none; }
+.nav-logo span { color:var(--green); }
+.nav-links { display:flex; gap:30px; list-style:none; }
+.nav-links a { text-decoration:none; color:var(--text-light); font-size:.92rem; font-weight:500; transition:color .2s; }
+.nav-links a:hover { color:var(--blue); }
+.nav-cta { background:var(--blue); color:#fff; border:none; padding:10px 22px; border-radius:50px; cursor:pointer; font-size:.9rem; font-weight:600; font-family:'DM Sans',sans-serif; transition:background .2s,transform .15s; }
+.nav-cta:hover { background:var(--blue-dark); transform:scale(1.04); }
+
+/* HERO */
+.hero { min-height:100vh; background:linear-gradient(135deg,#EBF5FE 0%,#F0FBF7 60%,#E8F4FD 100%); display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px; padding:100px 8% 60px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-100px; right:-100px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle,rgba(42,124,199,.08) 0%,transparent 70%); pointer-events:none; }
+.hero::after { content:''; position:absolute; bottom:-80px; left:-80px; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle,rgba(46,174,130,.07) 0%,transparent 70%); pointer-events:none; }
+.hero-text { position:relative; z-index:2; }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(46,174,130,.12); color:var(--green-dark); border:1px solid rgba(46,174,130,.25); border-radius:50px; padding:6px 16px; font-size:.82rem; font-weight:600; margin-bottom:24px; animation:fadeUp .6s ease both; }
+.hero-badge .dot { width:7px; height:7px; background:var(--green); border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.4);} }
+.hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,4.5vw,3.4rem); font-weight:700; line-height:1.18; color:var(--text); margin-bottom:18px; animation:fadeUp .7s .1s ease both; }
+.hero h1 em { color:var(--blue); font-style:normal; }
+.hero-sub { font-size:1.12rem; color:var(--text-light); line-height:1.7; margin-bottom:36px; max-width:480px; animation:fadeUp .7s .2s ease both; }
+.hero-btns { display:flex; gap:14px; flex-wrap:wrap; animation:fadeUp .7s .3s ease both; }
+.btn-primary { background:var(--blue); color:#fff; border:none; padding:15px 30px; border-radius:50px; cursor:pointer; font-size:1rem; font-weight:600; font-family:'DM Sans',sans-serif; text-decoration:none; display:inline-block; box-shadow:0 6px 24px rgba(42,124,199,.35); transition:all .2s; }
+.btn-primary:hover { background:var(--blue-dark); transform:translateY(-2px); }
+.btn-secondary { background:#fff; color:var(--green-dark); border:2px solid var(--green); padding:13px 28px; border-radius:50px; cursor:pointer; font-size:1rem; font-weight:600; font-family:'DM Sans',sans-serif; text-decoration:none; display:inline-block; transition:all .2s; }
+.btn-secondary:hover { background:var(--mint); transform:translateY(-2px); }
+.hero-stats { display:flex; gap:28px; margin-top:44px; animation:fadeUp .7s .4s ease both; }
+.stat { text-align:center; }
+.stat-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--blue-dark); display:block; }
+.stat-label { font-size:.82rem; color:var(--text-muted); }
+.hero-img-wrap { position:relative; z-index:2; animation:fadeIn .9s .2s ease both; }
+.hero-img-card { background:white; border-radius:28px; box-shadow:var(--shadow-lg); overflow:hidden; position:relative; }
+.hero-float-badge { position:absolute; bottom:20px; left:20px; background:white; border-radius:var(--radius-sm); padding:12px 18px; box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; }
+.hfb-text strong { display:block; font-size:.92rem; color:var(--text); }
+.hfb-text span { font-size:.78rem; color:var(--text-muted); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeIn { from{opacity:0;transform:scale(.97);} to{opacity:1;transform:scale(1);} }
+
+/* TRUST BAR */
+.trust-bar { background:var(--blue-dark); color:white; padding:16px 8%; display:flex; align-items:center; justify-content:center; gap:40px; flex-wrap:wrap; }
+.trust-item { display:flex; align-items:center; gap:8px; font-size:.88rem; font-weight:500; }
+
+/* SECTIONS */
+section { padding:90px 8%; }
+.section-tag { display:inline-block; background:var(--sky); color:var(--blue); border:1px solid var(--border); border-radius:50px; padding:5px 16px; font-size:.8rem; font-weight:600; margin-bottom:16px; letter-spacing:.04em; text-transform:uppercase; }
+h2.section-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.5rem); font-weight:700; color:var(--text); margin-bottom:14px; line-height:1.25; }
+.section-sub { color:var(--text-light); font-size:1.05rem; line-height:1.7; max-width:560px; }
+
+/* HOW */
+.how { background:var(--cream); }
+.how-header { text-align:center; max-width:640px; margin:0 auto; }
+.how-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px; }
+.how-card { background:white; border-radius:var(--radius); padding:36px 28px; position:relative; border:1px solid var(--border); box-shadow:var(--shadow); transition:transform .3s,box-shadow .3s; }
+.how-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+.how-num { position:absolute; top:-16px; left:28px; background:var(--blue); color:white; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; box-shadow:0 4px 14px rgba(42,124,199,.4); }
+.how-icon { font-size:2.8rem; margin-bottom:18px; display:block; }
+.how-card h3 { font-size:1.15rem; font-weight:600; margin-bottom:10px; }
+.how-card p { color:var(--text-light); line-height:1.65; font-size:.95rem; }
+
+/* GALLERY */
+.gallery-intro { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px; }
+.gallery-grid { display:grid; grid-template-columns:repeat(3,300px); justify-content:center; gap:22px; margin-top:44px; }
+.cat-card { background:white; border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow); transition:transform .3s,box-shadow .3s; width:300px; }
+.cat-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+.cat-card-img { height:190px; position:relative; overflow:hidden; }
+.cat-card-img img { width:100%; height:100%; object-fit:cover; }
+.status-badge { position:absolute; top:12px; right:12px; border-radius:50px; padding:4px 12px; font-size:.75rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; }
+.status-found { background:#EBFFF5; color:#1E8A65; }
+.cat-card-body { padding:18px 20px; }
+.cat-card-body h4 { font-size:1.02rem; font-weight:600; margin-bottom:6px; }
+.cat-card-loc { font-size:.83rem; color:var(--text-muted); margin-bottom:10px; }
+.cat-card-desc { font-size:.88rem; color:var(--text-light); line-height:1.55; margin-bottom:14px; }
+.cat-card-btn { width:100%; padding:10px; border-radius:var(--radius-sm); border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.88rem; transition:all .2s; background:var(--sky); color:var(--blue-dark); display:block; text-align:center; text-decoration:none; }
+.cat-card-btn:hover { background:var(--blue); color:white; }
+
+/* PAYMENT */
+.payment { background:linear-gradient(135deg,#EBF5FE 0%,#F0FBF7 100%); }
+.payment-header { text-align:center; max-width:640px; margin:0 auto; }
+.payment-wrap { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; margin-top:50px; }
+.payment-card { background:white; border-radius:var(--radius); padding:44px; box-shadow:var(--shadow-lg); border:1px solid var(--border); text-align:center; }
+.price-display { font-family:'Playfair Display',serif; font-size:3.6rem; font-weight:700; color:var(--blue-dark); margin:16px 0 8px; }
+.price-display sup { font-size:1.8rem; vertical-align:super; }
+.price-note { color:var(--text-muted); font-size:.88rem; margin-bottom:28px; }
+.price-breakdown { background:var(--cream); border-radius:var(--radius-sm); padding:20px; margin-bottom:26px; text-align:left; }
+.pb-row { display:flex; justify-content:space-between; padding:6px 0; font-size:.9rem; color:var(--text-light); border-bottom:1px solid var(--border); }
+.pb-row:last-child { border-bottom:none; font-weight:700; color:var(--text); }
+.paypal-btn { width:100%; padding:15px; background:#003087; color:white; border:none; border-radius:var(--radius-sm); font-size:1rem; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; display:flex; align-items:center; justify-content:center; gap:10px; transition:background .2s; margin-bottom:12px; text-decoration:none; }
+.paypal-btn:hover { background:#001D5B; }
+.paypal-steps { background:#EBF4FF; border:1px solid #C8DEFF; border-radius:var(--radius-sm); padding:14px 16px; text-align:left; margin-bottom:16px; }
+.paypal-steps p { font-size:.82rem; color:#1A5FA0; line-height:1.7; }
+.drop-zone { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:22px; text-align:center; cursor:pointer; background:var(--cream); transition:all .2s; }
+.drop-zone:hover { border-color:var(--blue); background:var(--sky); }
+.upload-zone { border:2px dashed #C8DEFF; border-radius:var(--radius-sm); padding:18px; text-align:center; cursor:pointer; background:#EBF4FF; transition:all .2s; }
+.upload-zone:hover { border-color:var(--green); background:var(--mint); }
+.pay-secure-msg { font-size:.8rem; color:var(--text-muted); display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; }
+.payment-info h3 { font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:16px; }
+.payment-info p { color:var(--text-light); line-height:1.7; margin-bottom:20px; }
+.pay-guarantee { background:white; border-radius:var(--radius-sm); border:1px solid var(--border); padding:18px 20px; display:flex; gap:14px; align-items:flex-start; box-shadow:var(--shadow); margin-bottom:14px; }
+.pay-guarantee .g-icon { font-size:1.8rem; flex-shrink:0; }
+.pay-guarantee strong { display:block; font-size:.95rem; margin-bottom:4px; }
+.pay-guarantee span { font-size:.85rem; color:var(--text-muted); line-height:1.5; }
+
+/* TESTIMONIALS */
+.testimonials { background:var(--cream); }
+.testi-header { text-align:center; max-width:640px; margin:0 auto; }
+.testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:50px; }
+.testi-card { background:white; border-radius:var(--radius); padding:30px; border:1px solid var(--border); box-shadow:var(--shadow); transition:transform .3s; }
+.testi-card:hover { transform:translateY(-4px); }
+.testi-stars { color:#F5C432; font-size:1rem; margin-bottom:14px; letter-spacing:2px; }
+.testi-quote { color:var(--text-light); line-height:1.7; font-size:.95rem; margin-bottom:22px; font-style:italic; }
+.testi-author { display:flex; align-items:center; gap:12px; }
+.testi-avatar { width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; }
+.testi-avatar img { width:100%; height:100%; object-fit:cover; }
+.testi-name { font-weight:600; font-size:.92rem; }
+.testi-city { font-size:.8rem; color:var(--text-muted); }
+
+/* ABOUT */
+.about { background:var(--blue-dark); color:white; }
+.about .section-tag { background:rgba(255,255,255,.12); color:rgba(255,255,255,.9); border-color:rgba(255,255,255,.2); }
+.about h2.section-title { color:white; }
+.about-wrap { display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
+.about-values { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:36px; }
+.av-item { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-sm); padding:20px; }
+.av-icon { font-size:1.8rem; margin-bottom:10px; display:block; }
+.av-item h4 { font-size:.95rem; margin-bottom:6px; color:white; }
+.av-item p { font-size:.85rem; color:rgba(255,255,255,.65); line-height:1.55; }
+.about-visual { display:flex; flex-direction:column; gap:16px; }
+.av-stat-card { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-sm); padding:22px 28px; display:flex; align-items:center; gap:20px; }
+.av-stat-card .n { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:700; color:white; }
+.av-stat-card .l { font-size:.88rem; color:rgba(255,255,255,.7); }
+.av-stat-card .sl { font-size:.75rem; color:rgba(255,255,255,.45); }
+
+/* CONTACT */
+.contact-header { text-align:center; max-width:640px; margin:0 auto; }
+.contact-wrap { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; margin-top:50px; }
+.contact-form { background:white; border-radius:var(--radius); padding:40px; box-shadow:var(--shadow-lg); border:1px solid var(--border); }
+.form-group { margin-bottom:20px; }
+.form-group label { display:block; font-size:.88rem; font-weight:600; color:var(--text); margin-bottom:7px; }
+.form-group input, .form-group select, .form-group textarea { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--text); background:var(--cream); outline:none; transition:border-color .2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--blue); background:white; }
+.form-group textarea { height:100px; resize:vertical; }
+.form-submit { width:100%; padding:14px; background:var(--blue); color:white; border:none; border-radius:50px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:700; font-size:1rem; transition:all .2s; margin-top:6px; }
+.form-submit:hover { background:var(--blue-dark); transform:translateY(-2px); }
+.contact-info h3 { font-family:'Playfair Display',serif; font-size:1.7rem; margin-bottom:14px; }
+.contact-info > p { color:var(--text-light); line-height:1.7; margin-bottom:30px; }
+.ci-channels { display:flex; flex-direction:column; gap:14px; }
+.ci-channel { display:flex; align-items:center; gap:14px; background:white; border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px 20px; text-decoration:none; color:var(--text); box-shadow:var(--shadow); transition:transform .2s; }
+.ci-channel:hover { transform:translateX(6px); }
+.ci-ch-icon { font-size:1.6rem; width:44px; text-align:center; }
+.ci-ch-title { font-weight:600; font-size:.95rem; }
+.ci-ch-val { font-size:.85rem; color:var(--text-muted); }
+.ci-hours { margin-top:20px; background:var(--mint); border-radius:var(--radius-sm); padding:22px; border:1px solid rgba(46,174,130,.2); }
+.ci-hours h4 { color:var(--green-dark); margin-bottom:8px; }
+.ci-hours p { font-size:.88rem; color:var(--text-light); line-height:1.65; }
+
+/* FOOTER */
+footer { background:var(--text); color:rgba(255,255,255,.7); padding:60px 8% 30px; }
+.footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:48px; }
+.footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:white; margin-bottom:14px; display:block; }
+.footer-logo span { color:var(--green); }
+.footer-desc { font-size:.88rem; line-height:1.65; margin-bottom:20px; }
+.footer-seals { display:flex; gap:10px; flex-wrap:wrap; }
+.seal { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-sm); padding:8px 12px; font-size:.75rem; color:rgba(255,255,255,.8); display:flex; align-items:center; gap:6px; }
+.footer-col h4 { color:white; font-size:.95rem; font-weight:600; margin-bottom:16px; }
+.footer-col ul { list-style:none; }
+.footer-col li { margin-bottom:10px; }
+.footer-col a { color:rgba(255,255,255,.6); text-decoration:none; font-size:.88rem; transition:color .2s; }
+.footer-col a:hover { color:var(--blue-light); }
+.footer-bottom { border-top:1px solid rgba(255,255,255,.1); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; font-size:.82rem; }
+.footer-legal { display:flex; gap:24px; flex-wrap:wrap; }
+.footer-legal a { color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
+.footer-legal a:hover { color:rgba(255,255,255,.9); }
+
+/* MODALES */
+.modal-overlay { position:fixed; inset:0; z-index:1000; background:rgba(10,25,45,.55); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; animation:mFadeIn .25s ease; }
+@keyframes mFadeIn { from{opacity:0;} to{opacity:1;} }
+.modal { background:white; border-radius:var(--radius); padding:44px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 30px 80px rgba(0,0,0,.25); position:relative; animation:slideUp .3s ease; }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+.modal-close { position:absolute; top:16px; right:18px; background:none; border:none; cursor:pointer; font-size:1.5rem; color:var(--text-muted); line-height:1; }
+.modal h3 { font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:8px; }
+.modal > p { color:var(--text-light); font-size:.93rem; margin-bottom:24px; }
+.modal-type-btns { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+.type-btn { border:2px solid var(--border); border-radius:var(--radius-sm); padding:18px; cursor:pointer; background:white; font-family:'DM Sans',sans-serif; transition:all .2s; text-align:center; }
+.type-btn:hover, .type-btn.active { border-color:var(--blue); background:var(--sky); }
+.type-btn .tb-icon { font-size:2rem; display:block; margin-bottom:8px; }
+.type-btn strong { display:block; font-size:.95rem; }
+.type-btn span { font-size:.8rem; color:var(--text-muted); }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* TOAST */
+#toast { position:fixed; bottom:30px; right:30px; z-index:2000; background:var(--green); color:white; padding:16px 24px; border-radius:var(--radius-sm); box-shadow:0 8px 30px rgba(46,174,130,.4); font-weight:600; font-size:.95rem; transform:translateY(100px); opacity:0; transition:all .3s ease; display:flex; align-items:center; gap:10px; }
+
+/* RESPONSIVE */
+/* Mobile nav menu */
+@media (max-width:768px) {
+  #hamburger { display:flex !important; }
+  .nav-cta { display:none; }
+  .nav-links {
+    position:fixed; top:62px; left:0; right:0;
+    background:white; flex-direction:column; gap:0;
+    padding:0; box-shadow:0 8px 30px rgba(0,0,0,.12);
+    transform:translateY(-110%); opacity:0;
+    transition:all .3s ease; z-index:99; display:flex !important;
+  }
+  .nav-links.open { transform:translateY(0); opacity:1; }
+  .nav-links li { border-bottom:1px solid var(--border); }
+  .nav-links a { display:block; padding:16px 20px; font-size:1rem; color:var(--text); }
+  .nav-links a:hover { background:var(--sky); color:var(--blue); }
+}
+@media (max-width:1024px) {
+  .hero { padding:100px 5% 60px; gap:30px; }
+  .gallery-grid { grid-template-columns:repeat(2,1fr); width:100%; }
+  .cat-card { width:100%; }
+  .footer-top { grid-template-columns:1fr 1fr; }
+  .testi-grid { grid-template-columns:1fr 1fr; }
+}
+
+/* ── MOBILE ── */
+@media (max-width:768px) {
+  /* Navbar */
+  nav { padding:0 4%; height:62px; }
+  nav .nav-links { display:none; }
+  .nav-logo { font-size:1.15rem; }
+  .nav-cta { padding:8px 16px; font-size:.82rem; }
+
+  /* Hero */
+  .hero { grid-template-columns:1fr; padding:80px 5% 50px; gap:28px; text-align:center; }
+  .hero-img-wrap { order:-1; }
+  .hero h1 { font-size:1.85rem; }
+  .hero-sub { font-size:1rem; max-width:100%; margin:0 auto 28px; }
+  .hero-btns { justify-content:center; flex-direction:column; align-items:center; gap:12px; }
+  .btn-primary, .btn-secondary { width:100%; max-width:320px; text-align:center; padding:14px 20px; }
+  .hero-stats { justify-content:center; gap:18px; }
+  .stat-num { font-size:1.5rem; }
+  .hero-float-badge { left:10px; right:10px; bottom:12px; padding:10px 14px; }
+  .hfb-text strong { font-size:.82rem; }
+  .hfb-text span { font-size:.72rem; }
+
+  /* Trust bar */
+  .trust-bar { gap:12px; padding:14px 5%; }
+  .trust-item { font-size:.78rem; }
+
+  /* Sections */
+  section { padding:60px 5%; }
+  h2.section-title { font-size:1.6rem; }
+  .section-sub { font-size:.95rem; }
+
+  /* How */
+  .how-grid { grid-template-columns:1fr; gap:24px; margin-top:36px; }
+  .how-card { padding:28px 22px; }
+  .how-icon { font-size:2.2rem; margin-bottom:14px; }
+
+  /* Gallery */
+  .gallery-grid { grid-template-columns:1fr; width:100%; gap:18px; margin-top:30px; }
+  .cat-card { width:100%; }
+  .gallery-intro { flex-direction:column; align-items:flex-start; gap:14px; }
+  .gallery-intro .btn-primary { width:100%; text-align:center; }
+
+  /* Payment */
+  .payment-wrap { grid-template-columns:1fr; gap:30px; }
+  .payment-card { padding:26px 20px; }
+  .price-display { font-size:2.8rem; }
+  .payment-info h3 { font-size:1.3rem; }
+
+  /* Testimonials */
+  .testi-grid { grid-template-columns:1fr; gap:18px; margin-top:30px; }
+
+  /* About */
+  .about-wrap { grid-template-columns:1fr; gap:36px; }
+  .about-values { grid-template-columns:1fr 1fr; gap:12px; }
+  .av-stat-card { padding:16px 18px; }
+  .av-stat-card .n { font-size:1.8rem; }
+
+  /* Contact */
+  .contact-wrap { grid-template-columns:1fr; gap:30px; }
+  .contact-form { padding:26px 20px; }
+
+  /* Footer */
+  .footer-top { grid-template-columns:1fr; gap:28px; }
+  .footer-bottom { flex-direction:column; text-align:center; gap:10px; }
+  .footer-legal { justify-content:center; }
+
+  /* Modal */
+  .modal { padding:24px 18px; max-width:100%; margin:10px; border-radius:var(--radius); }
+  .modal h3 { font-size:1.3rem; }
+  .modal-type-btns { grid-template-columns:1fr 1fr; gap:10px; }
+  .type-btn { padding:14px 10px; }
+  .type-btn .tb-icon { font-size:1.6rem; }
+  .type-btn strong { font-size:.82rem; }
+}
+
+/* ── PETIT MOBILE ── */
+@media (max-width:400px) {
+  .hero h1 { font-size:1.6rem; }
+  .hero-stats { flex-direction:column; gap:12px; }
+  .modal-type-btns { grid-template-columns:1fr; }
+  .about-values { grid-template-columns:1fr; }
+  .trust-bar { flex-direction:column; gap:8px; align-items:flex-start; padding:12px 5%; }
+  .paypal-btn { font-size:.85rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">🐾 Cœur<span> de Chat</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#fonctionnement" onclick="closeNav()">Comment ça marche</a></li>
+    <li><a href="#galerie" onclick="closeNav()">Chats trouvés</a></li>
+    <li><a href="#temoignages" onclick="closeNav()">Témoignages</a></li>
+    <li><a href="#contact" onclick="closeNav()">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="nav-cta" onclick="openModal()">Signaler mon chat</button>
+    <button id="hamburger" onclick="toggleNav()" style="display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:5px;">
+      <span style="display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s" id="h1"></span>
+      <span style="display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s" id="h2"></span>
+      <span style="display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s" id="h3"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="hero-text">
+    <div class="hero-badge"><span class="dot"></span>Service actif 7j/7 — Réponse en moins de 2h</div>
+    <h1>Nous retrouvons votre chat <em>en toute sécurité</em> 🐾</h1>
+    <p class="hero-sub">Chaque chat mérite de retrouver sa maison. Notre réseau de bénévoles et de professionnels vous accompagne à chaque étape, avec bienveillance et efficacité.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary" onclick="openModal();return false;">🐱 Signaler mon chat perdu</a>
+      <a href="#" class="btn-secondary" onclick="openModal();return false;">🏠 J'ai trouvé un chat</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="counter">+0</span><span class="stat-label">chats retrouvés</span></div>
+      <div class="stat"><span class="stat-num">48h</span><span class="stat-label">délai moyen</span></div>
+      <div class="stat"><span class="stat-num">98%</span><span class="stat-label">de satisfaction</span></div>
+    </div>
+  </div>
+  <div class="hero-img-wrap">
+    <div class="hero-img-card">
+      <img src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=700&q=80" alt="Chat attendant son propriétaire" style="width:100%;height:420px;object-fit:cover;display:block;">
+      <div class="hero-float-badge">
+        <div style="font-size:2rem">🔒</div>
+        <div class="hfb-text">
+          <strong>Service vérifié &amp; sécurisé</strong>
+          <span>Paiement après photo, avant récupération</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">✅ Service certifié en France</div>
+  <div class="trust-item">🔐 Paiement après photo confirmée</div>
+  <div class="trust-item">📞 Disponible 7j/7</div>
+  <div class="trust-item">🛡️ Données protégées RGPD</div>
+  <div class="trust-item">❤️ +500 familles réunies</div>
+</div>
+
+<!-- FONCTIONNEMENT -->
+<section class="how" id="fonctionnement">
+  <div class="how-header">
+    <div class="section-tag">Comment ça marche</div>
+    <h2 class="section-title reveal">Retrouver votre chat en 3 étapes simples</h2>
+    <p class="section-sub reveal" style="margin:0 auto">Un processus clair, transparent et bienveillant. Nous sommes là pour vous guider de A à Z.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-card reveal">
+      <div class="how-num">1</div>
+      <span class="how-icon">📋</span>
+      <h3>Déclaration en ligne</h3>
+      <p>Remplissez notre formulaire en moins de 3 minutes : photo, description, localisation. Votre avis est immédiatement diffusé sur notre réseau national.</p>
+    </div>
+    <div class="how-card reveal">
+      <div class="how-num">2</div>
+      <span class="how-icon">🤝</span>
+      <h3>Mise en relation rapide</h3>
+      <p>Notre équipe contacte le réseau local de bénévoles, cliniques vétérinaires et refuges partenaires. Vous recevez une mise à jour sous 2 heures.</p>
+    </div>
+    <div class="how-card reveal">
+      <div class="how-num">3</div>
+      <span class="how-icon">💳</span>
+      <h3>Paiement avant récupération</h3>
+      <p>Nous vous envoyons une photo de votre chat pour confirmation. Une fois la photo validée par vos soins, le paiement de <strong>103,35 €</strong> est effectué via PayPal — puis nous organisons immédiatement la récupération.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie">
+  <div class="gallery-intro">
+    <div>
+      <div class="section-tag">Chats trouvés</div>
+      <h2 class="section-title reveal">Chats trouvés — Reconnaissez-vous votre compagnon ?</h2>
+      <p class="section-sub reveal">Ces chats ont été trouvés et attendent de retrouver leur famille. Si vous reconnaissez votre chat, contactez-nous immédiatement.</p>
+    </div>
+    <a href="#" class="btn-primary" onclick="openModal();return false;" style="white-space:nowrap">+ Signaler mon chat perdu</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="cat-card reveal">
+      <div class="cat-card-img">
+        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&q=80" alt="Chat roux tigré">
+        <span class="status-badge status-found">Trouvé</span>
+      </div>
+      <div class="cat-card-body">
+        <h4>Chat roux tigré — Mâle</h4>
+        <div class="cat-card-loc">📍 Paris 11e — Trouvé il y a 2 jours</div>
+        <p class="cat-card-desc">Mâle roux, poil court, sans collier. Très câlin et sociable. Trouvé rue de la Roquette.</p>
+        <a href="mailto:coeurchat@gmail.com?subject=Chat%20roux%20tigré%20Paris%2011e&body=Bonjour%2C%20je%20pense%20reconnaître%20mon%20chat." class="cat-card-btn">✉️ C'est mon chat !</a>
+      </div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-card-img">
+        <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=400&q=80" alt="Chat gris trouvé">
+        <span class="status-badge status-found">Trouvé</span>
+      </div>
+      <div class="cat-card-body">
+        <h4>Chat gris — Femelle</h4>
+        <div class="cat-card-loc">📍 Lyon 6e — Trouvé ce matin</div>
+        <p class="cat-card-desc">Femelle, robe grise, yeux verts. Très docile et calme. Trouvée square Gabriel Péri.</p>
+        <a href="mailto:coeurchat@gmail.com?subject=Chat%20gris%20Lyon%206e&body=Bonjour%2C%20je%20pense%20reconnaître%20mon%20chat." class="cat-card-btn">✉️ C'est mon chat !</a>
+      </div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-card-img">
+        <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400&q=80" alt="Chat tabby brun">
+        <span class="status-badge status-found">Trouvé</span>
+      </div>
+      <div class="cat-card-body">
+        <h4>Chat tabby brun — Mâle</h4>
+        <div class="cat-card-loc">📍 Marseille 13e — Trouvé il y a 3 jours</div>
+        <p class="cat-card-desc">Mâle, robe tabby brun, castré. Timide au début mais s'apprivoise vite. Trouvé avenue de la Rose.</p>
+        <a href="mailto:coeurchat@gmail.com?subject=Chat%20tabby%20Marseille&body=Bonjour%2C%20je%20pense%20reconnaître%20mon%20chat." class="cat-card-btn">✉️ C'est mon chat !</a>
+      </div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-card-img">
+        <img src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=400&q=80" alt="Chaton noir trouvé">
+        <span class="status-badge status-found">Trouvé</span>
+      </div>
+      <div class="cat-card-body">
+        <h4>Chaton noir — Environ 4 mois</h4>
+        <div class="cat-card-loc">📍 Nantes centre — Trouvé hier soir</div>
+        <p class="cat-card-desc">Très jeune chaton noir, craintif mais en bonne santé. Trouvé sous une voiture rue Crébillon.</p>
+        <a href="mailto:coeurchat@gmail.com?subject=Chaton%20noir%20Nantes&body=Bonjour%2C%20je%20pense%20reconnaître%20mon%20chat." class="cat-card-btn">✉️ C'est mon chat !</a>
+      </div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-card-img">
+        <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?w=400&q=80" alt="Chat blanc trouvé">
+        <span class="status-badge status-found">Trouvé</span>
+      </div>
+      <div class="cat-card-body">
+        <h4>Chat blanc — Femelle</h4>
+        <div class="cat-card-loc">📍 Nice Promenade — Trouvé ce matin</div>
+        <p class="cat-card-desc">Femelle, robe blanche, poil long et soyeux. Très propre, semble habituée à vivre en intérieur.</p>
+        <a href="mailto:coeurchat@gmail.com?subject=Chat%20blanc%20Nice&body=Bonjour%2C%20je%20pense%20reconnaître%20mon%20chat." class="cat-card-btn">✉️ C'est mon chat !</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIEMENT -->
+<section class="payment" id="tarifs">
+  <div class="payment-header">
+    <div class="section-tag">Transparence totale</div>
+    <h2 class="section-title reveal">Un tarif clair, sans surprise</h2>
+    <p class="section-sub reveal" style="margin:0 auto">Nous croyons en la transparence absolue. Voici ce que couvrent nos frais et comment se déroule le paiement.</p>
+  </div>
+  <div class="payment-wrap">
+    <div class="payment-card reveal">
+      <div style="font-size:2.5rem">🐱</div>
+      <div class="price-display"><sup>€</sup>103,35</div>
+      <p class="price-note">Frais uniques, tout inclus</p>
+      <div class="price-breakdown">
+        <div class="pb-row"><span>Frais de soins vétérinaires</span><span>42,00 €</span></div>
+        <div class="pb-row"><span>Hébergement temporaire</span><span>31,50 €</span></div>
+        <div class="pb-row"><span>Coordination &amp; logistique</span><span>18,50 €</span></div>
+        <div class="pb-row"><span>Frais de remise sécurisée</span><span>11,35 €</span></div>
+        <div class="pb-row"><strong>Total</strong><strong>103,35 €</strong></div>
+      </div>
+      <a href="https://www.paypal.com/fr/digital-wallet/send-receive-money/send-money" target="_blank" class="paypal-btn">
+        <span style="font-size:1.2rem">💙</span> Payer via PayPal — Entre proches
+      </a>
+      <div class="paypal-steps">
+        <p><strong>📌 Comment procéder :</strong><br>
+        1. Cliquez sur le bouton ci-dessus<br>
+        2. Connectez-vous à votre compte PayPal<br>
+        3. Choisissez <strong>« Envoyer de l'argent »</strong><br>
+        4. Sélectionnez <strong>« Entre proches »</strong> (sans frais)<br>
+        5. Montant : <strong>103,35 €</strong> — après réception de la photo de confirmation</p>
+      </div>
+      <div style="text-align:left;margin-bottom:14px">
+        <label style="display:block;font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:8px">🧾 Envoyer votre preuve de paiement</label>
+        <div id="payment-drop-zone" class="upload-zone" onclick="document.getElementById('payment-proof').click()">
+          <div id="payment-preview" style="display:none;margin-bottom:10px">
+            <img id="payment-preview-img" style="max-height:100px;border-radius:8px;object-fit:cover;" alt="Preuve">
+          </div>
+          <div id="payment-placeholder">
+            <div style="font-size:1.8rem;margin-bottom:6px">🧾</div>
+            <div style="font-size:.85rem;color:#1A5FA0;font-weight:500">Cliquez pour joindre votre capture PayPal</div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin-top:4px">JPG, PNG, PDF — Max 5MB</div>
+          </div>
+        </div>
+        <input type="file" id="payment-proof" accept="image/*,.pdf" style="display:none" onchange="previewPayment(this)">
+        <button onclick="sendPaymentProof()" style="margin-top:10px;width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:50px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;transition:background .2s;">
+          ✅ Envoyer ma preuve de paiement
+        </button>
+      </div>
+      <p class="pay-secure-msg">🔒 Paiement chiffré SSL — Données protégées RGPD</p>
+    </div>
+    <div class="payment-info reveal">
+      <h3>Paiement après photo, avant récupération</h3>
+      <p>Votre confiance est notre priorité absolue. Le règlement de <strong>103,35 €</strong> intervient <strong>avant la récupération de votre chat</strong>, mais uniquement après réception d'une photo confirmant qu'il s'agit bien de votre animal. <strong>Pas de photo = pas de paiement.</strong></p>
+      <p>Nos frais couvrent les soins apportés à votre animal, son hébergement temporaire dans de bonnes conditions, ainsi que la coordination complète de la remise en mains propres.</p>
+      <div class="pay-guarantee">
+        <div class="g-icon">🛡️</div>
+        <div><strong>Garantie de remboursement</strong><span>Si votre chat n'est pas retrouvé via notre service, nous vous remboursons intégralement. Sans question, sans délai.</span></div>
+      </div>
+      <div class="pay-guarantee">
+        <div class="g-icon">📸</div>
+        <div><strong>Photo de confirmation obligatoire</strong><span>Nous vous envoyons une photo claire de votre chat avant tout paiement. Une fois confirmée, le règlement est effectué puis nous organisons la récupération.</span></div>
+      </div>
+      <div class="pay-guarantee">
+        <div class="g-icon">💙</div>
+        <div><strong>PayPal « Entre proches » — Sans frais</strong><span>En choisissant cette option, aucun frais de transaction n'est prélevé. Vous payez exactement 103,35 €, pas un centime de plus.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section class="testimonials" id="temoignages">
+  <div class="testi-header">
+    <div class="section-tag">Témoignages</div>
+    <h2 class="section-title reveal">Des familles réunies parlent pour nous</h2>
+    <p class="section-sub reveal" style="margin:0 auto">Des centaines de propriétaires nous ont fait confiance. Voici ce qu'ils nous ont dit après avoir retrouvé leur compagnon.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"J'ai retrouvé mon chat Filou en seulement 48h. J'étais désespérée après 4 jours sans nouvelles. L'équipe a été d'une réactivité et d'une bienveillance remarquables. Je recommande à 100%."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=47" alt="Sophie"></div>
+        <div><div class="testi-name">Sophie M.</div><div class="testi-city">Paris 11e — Filou retrouvé en 2 jours</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Service incroyable. Mon chat avait disparu depuis une semaine. Grâce à leur réseau et leur sérieux, il a été localisé à 2 km de chez moi. Le paiement après photo m'a rassuré dès le départ."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=11" alt="Thomas"></div>
+        <div><div class="testi-name">Thomas B.</div><div class="testi-city">Lyon — Noisette retrouvée en 3 jours</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Ce qui m'a convaincue, c'est la transparence totale sur les frais et l'obligation de photo avant paiement. Professionnels, humains, efficaces. Merci d'exister pour les familles dans la détresse."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=32" alt="Marie-Claire"></div>
+        <div><div class="testi-name">Marie-Claire D.</div><div class="testi-city">Bordeaux — Luna retrouvée en 36h</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Rapide, humain, sécurisé. On m'a envoyé une photo de mon chat avant que je paie quoi que ce soit. C'est ça qui fait vraiment la différence. Mes enfants ont pu retrouver leur compagnon."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=52" alt="Laurent"></div>
+        <div><div class="testi-name">Laurent V.</div><div class="testi-city">Marseille — Simba retrouvé en 1 jour</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"J'avais peur de ne jamais revoir Cannelle. Leur équipe m'a accompagnée avec tant de douceur. Chaque message était rassurant. Retrouvailles inoubliables. Merci du fond du cœur."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=44" alt="Isabelle"></div>
+        <div><div class="testi-name">Isabelle R.</div><div class="testi-city">Nantes — Cannelle retrouvée en 4 jours</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Site très clair, formulaire simple, réponse ultra rapide. En moins de 2h j'avais un coordinateur dédié. Les frais sont honnêtes et bien expliqués. Aucune mauvaise surprise."</p>
+      <div class="testi-author">
+        <div class="testi-avatar"><img src="https://i.pravatar.cc/44?img=68" alt="Damien"></div>
+        <div><div class="testi-name">Damien L.</div><div class="testi-city">Toulouse — Moustache retrouvé en 2 jours</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- À PROPOS -->
+<section class="about" id="apropos">
+  <div class="about-wrap">
+    <div>
+      <div class="section-tag">Notre mission</div>
+      <h2 class="section-title reveal">Créés par des amoureux des animaux, pour des amoureux des animaux</h2>
+      <p class="section-sub reveal" style="color:rgba(255,255,255,.75);max-width:100%">Cœur de Chat est né d'une histoire simple : nos fondateurs ont eux-mêmes vécu la détresse de perdre un compagnon à quatre pattes. Depuis 2019, nous avons bâti un réseau humain et fiable pour que plus aucune famille ne vive ce cauchemar seule.</p>
+      <div class="about-values">
+        <div class="av-item reveal"><span class="av-icon">❤️</span><h4>Bienveillance</h4><p>Chaque situation est unique. Nous vous accompagnons avec empathie, pas avec des scripts.</p></div>
+        <div class="av-item reveal"><span class="av-icon">🔍</span><h4>Réactivité</h4><p>Les premières heures sont cruciales. Notre équipe est mobilisée en moins de 2h.</p></div>
+        <div class="av-item reveal"><span class="av-icon">🛡️</span><h4>Transparence</h4><p>Frais clairs, preuves obligatoires, remboursement garanti. Aucune zone d'ombre.</p></div>
+        <div class="av-item reveal"><span class="av-icon">🤝</span><h4>Réseau humain</h4><p>+2 000 bénévoles, vétérinaires et refuges partenaires à travers toute la France.</p></div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <div style="border-radius:var(--radius);overflow:hidden;height:200px;">
+        <img src="https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=600&q=80" alt="Bénévole avec un chat" style="width:100%;height:100%;object-fit:cover;opacity:.85">
+      </div>
+      <div class="av-stat-card"><div><div class="n">+500</div><div class="l">chats retrouvés</div><div class="sl">depuis notre création</div></div><span style="font-size:2.5rem;margin-left:auto">🐱</span></div>
+      <div class="av-stat-card"><div><div class="n">48h</div><div class="l">délai moyen de retrouvaille</div><div class="sl">sur l'ensemble des cas traités</div></div><span style="font-size:2.5rem;margin-left:auto">⚡</span></div>
+      <div class="av-stat-card"><div><div class="n">98%</div><div class="l">de clients satisfaits</div><div class="sl">selon nos avis vérifiés</div></div><span style="font-size:2.5rem;margin-left:auto">⭐</span></div>
+      <div class="av-stat-card"><div><div class="n">2 000+</div><div class="l">bénévoles partenaires</div><div class="sl">dans toute la France</div></div><span style="font-size:2.5rem;margin-left:auto">🤝</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-header">
+    <div class="section-tag">Nous contacter</div>
+    <h2 class="section-title reveal">Une question ? Nous sommes là pour vous</h2>
+    <p class="section-sub reveal" style="margin:0 auto">Réponse garantie sous 2 heures. Disponibles 7j/7 pour vous accompagner dans cette période difficile.</p>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-form reveal">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:6px">Envoyez-nous un message</h3>
+      <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:24px">Nous vous répondrons dans les meilleurs délais.</p>
+      <form id="contactForm" onsubmit="submitContactForm(event)">
+        <div class="form-group"><label>Votre prénom *</label><input type="text" name="prenom" placeholder="Marie" required></div>
+        <div class="form-group"><label>Votre email *</label><input type="email" name="email" placeholder="marie@email.com" required></div>
+        <div class="form-group">
+          <label>Votre demande</label>
+          <select name="demande">
+            <option>Mon chat est perdu</option>
+            <option>J'ai trouvé un chat</option>
+            <option>Question sur le service</option>
+            <option>Question sur le paiement</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label><textarea name="message" placeholder="Décrivez votre situation, nous sommes là pour vous aider..."></textarea></div>
+        <button type="submit" class="form-submit">Envoyer mon message 💌</button>
+      </form>
+      <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:12px">🔒 Vos données sont confidentielles et jamais partagées.</p>
+    </div>
+    <div class="contact-info reveal">
+      <h3>Contactez-nous directement</h3>
+      <p>Pour une urgence, utilisez directement nos canaux de contact. Notre équipe est réactive et à votre écoute 7 jours sur 7.</p>
+      <div class="ci-channels">
+        <a href="mailto:coeurchat@gmail.com" class="ci-channel">
+          <div class="ci-ch-icon">✉️</div>
+          <div><div class="ci-ch-title">Email</div><div class="ci-ch-val">coeurchat@gmail.com</div></div>
+        </a>
+        <a href="#" class="ci-channel">
+          <div class="ci-ch-icon">💬</div>
+          <div><div class="ci-ch-title">WhatsApp</div><div class="ci-ch-val">+33 6 XX XX XX XX — Réponse immédiate</div></div>
+        </a>
+        <a href="#" class="ci-channel" onclick="openModal();return false;">
+          <div class="ci-ch-icon">🐾</div>
+          <div><div class="ci-ch-title">Signalement d'urgence</div><div class="ci-ch-val">Traitement prioritaire sous 30 min</div></div>
+        </a>
+      </div>
+      <div class="ci-hours">
+        <h4>🕐 Horaires de permanence</h4>
+        <p>Lundi – Vendredi : 8h00 – 20h00<br>Samedi – Dimanche : 9h00 – 18h00<br><strong style="color:var(--green-dark)">Urgences : 24h/24, 7j/7 via WhatsApp</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo">🐾 Cœur<span> de Chat</span></span>
+      <p class="footer-desc">La plateforme française de référence pour retrouver les chats perdus. Un réseau humain, des professionnels engagés, un service transparent et sécurisé.</p>
+      <div class="footer-seals">
+        <div class="seal">🔒 SSL Sécurisé</div>
+        <div class="seal">🛡️ RGPD Conforme</div>
+        <div class="seal">✅ PayPal Vérifié</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#fonctionnement">Comment ça marche</a></li>
+        <li><a href="#galerie">Chats trouvés</a></li>
+        <li><a href="#temoignages">Témoignages</a></li>
+        <li><a href="#apropos">À propos</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Signaler un chat perdu</a></li>
+        <li><a href="#">J'ai trouvé un chat</a></li>
+        <li><a href="#">Suivi de dossier</a></li>
+        <li><a href="#">Réseau bénévoles</a></li>
+        <li><a href="#">Partenaires vétérinaires</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Légal</h4>
+      <ul>
+        <li><a href="#" onclick="showLegal('mentions');return false;">Mentions légales</a></li>
+        <li><a href="#" onclick="showLegal('cgu');return false;">Conditions d'utilisation</a></li>
+        <li><a href="#" onclick="showLegal('privacy');return false;">Politique de confidentialité</a></li>
+        <li><a href="#" onclick="showLegal('cookies');return false;">Gestion des cookies</a></li>
+        <li><a href="#" onclick="showLegal('remboursement');return false;">Politique de remboursement</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Cœur de Chat — Tous droits réservés. Made with ❤️ in France.</p>
+    <div class="footer-legal">
+      <a href="#" onclick="showLegal('mentions');return false;">Mentions légales</a>
+      <a href="#" onclick="showLegal('cgu');return false;">CGU</a>
+      <a href="#" onclick="showLegal('privacy');return false;">Confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALE SIGNALEMENT -->
+<div class="modal-overlay" id="mainModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <h3>Signaler un chat 🐾</h3>
+    <p>Vous avez perdu votre chat ou en avez trouvé un ? Commençons par identifier votre situation.</p>
+    <div class="modal-type-btns">
+      <button class="type-btn" onclick="selectType(this)">
+        <span class="tb-icon">😿</span>
+        <strong>Mon chat est perdu</strong>
+        <span>Je recherche mon compagnon</span>
+      </button>
+      <button class="type-btn" onclick="selectType(this)">
+        <span class="tb-icon">🏠</span>
+        <strong>J'ai trouvé un chat</strong>
+        <span>Je veux aider une famille</span>
+      </button>
+    </div>
+    <div class="form-group"><label>Votre prénom *</label><input type="text" id="modal-prenom" placeholder="Votre prénom"></div>
+    <div class="form-group"><label>Ville ou code postal *</label><input type="text" id="modal-ville" placeholder="Paris, 75011..."></div>
+    <div class="form-group"><label>Votre email *</label><input type="email" id="modal-email" placeholder="email@exemple.com"></div>
+    <div class="form-group">
+      <label>Description de votre chat</label>
+      <textarea id="modal-description" style="height:80px;width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.95rem;background:var(--cream);outline:none;resize:vertical;" placeholder="Couleur, race, signes particuliers..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>📷 Photo de votre chat</label>
+      <div id="photo-drop-zone" style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:22px;text-align:center;cursor:pointer;background:var(--cream);transition:all .2s;" onclick="document.getElementById('modal-photo').click()">
+        <div id="photo-preview" style="display:none;margin-bottom:10px"><img id="photo-preview-img" style="max-height:120px;border-radius:8px;object-fit:cover;" alt="Aperçu"></div>
+        <div id="photo-placeholder">
+          <div style="font-size:2rem;margin-bottom:6px">📷</div>
+          <div style="font-size:.88rem;color:var(--text-muted)">Cliquez pour ajouter une photo de votre chat</div>
+          <div style="font-size:.75rem;color:var(--text-muted);margin-top:4px">JPG, PNG — Max 5MB</div>
+        </div>
+      </div>
+      <input type="file" id="modal-photo" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+    </div>
+    <button class="form-submit" onclick="submitReport()">Envoyer ma déclaration 🐾</button>
+    <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:10px">Un coordinateur vous contactera dans les 2 heures. Service disponible 7j/7.</p>
+  </div>
+</div>
+
+<!-- MODALE LÉGALE -->
+<div class="modal-overlay" id="legalModal">
+  <div class="modal" style="max-width:620px">
+    <button class="modal-close" onclick="closeLegal()">&#x2715;</button>
+    <div id="legalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">✅ Message envoyé ! Nous vous contactons sous 2h.</div>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Hamburger menu
+var navOpen = false;
+function toggleNav() {
+  navOpen = !navOpen;
+  document.getElementById('navLinks').classList.toggle('open', navOpen);
+  document.getElementById('h1').style.transform = navOpen ? 'translateY(7px) rotate(45deg)' : '';
+  document.getElementById('h2').style.opacity = navOpen ? '0' : '1';
+  document.getElementById('h3').style.transform = navOpen ? 'translateY(-7px) rotate(-45deg)' : '';
+}
+function closeNav() {
+  navOpen = false;
+  document.getElementById('navLinks').classList.remove('open');
+  document.getElementById('h1').style.transform = '';
+  document.getElementById('h2').style.opacity = '1';
+  document.getElementById('h3').style.transform = '';
+}
+
+// Compteur animé
+(function() {
+  var count = 0, target = 527, el = document.getElementById('counter');
+  var timer = setInterval(function() {
+    count = Math.min(count + 9, target);
+    el.textContent = '+' + count;
+    if (count >= target) clearInterval(timer);
+  }, 30);
+})();
+
+// Scroll reveal
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) setTimeout(function() { e.target.classList.add('visible'); }, i * 80);
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+// Modale
+function openModal() { document.getElementById('mainModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal() { document.getElementById('mainModal').classList.remove('open'); document.body.style.overflow = ''; }
+function selectType(btn) { document.querySelectorAll('.type-btn').forEach(function(b) { b.classList.remove('active'); }); btn.classList.add('active'); }
+
+// Fermeture overlay
+document.querySelectorAll('.modal-overlay').forEach(function(o) {
+  o.addEventListener('click', function(e) { if (e.target === o) { closeModal(); closeLegal(); } });
+});
+
+// Toast
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg || '✅ Message envoyé ! Nous vous contactons sous 2h.';
+  t.style.transform = 'translateY(0)'; t.style.opacity = '1';
+  setTimeout(function() { t.style.transform = 'translateY(100px)'; t.style.opacity = '0'; }, 4500);
+}
+
+// Aperçu photo signalement
+function previewPhoto(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('photo-preview-img').src = e.target.result;
+      document.getElementById('photo-preview').style.display = 'block';
+      document.getElementById('photo-placeholder').style.display = 'none';
+      var dz = document.getElementById('photo-drop-zone');
+      dz.style.borderColor = 'var(--green)'; dz.style.background = 'var(--mint)';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Aperçu preuve paiement
+function previewPayment(input) {
+  if (input.files && input.files[0]) {
+    var file = input.files[0];
+    var dz = document.getElementById('payment-drop-zone');
+    dz.style.borderColor = 'var(--green)'; dz.style.background = 'var(--mint)';
+    if (file.type.startsWith('image/')) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('payment-preview-img').src = e.target.result;
+        document.getElementById('payment-preview').style.display = 'block';
+        document.getElementById('payment-placeholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById('payment-placeholder').innerHTML = '<div style="font-size:1.8rem">📄</div><div style="font-size:.85rem;color:var(--green-dark);font-weight:600">' + file.name + ' sélectionné</div>';
+    }
+  }
+}
+
+// Envoi signalement (FormSubmit — reçu par vous, invisible pour le client)
+function submitReport() {
+  var prenom = document.getElementById('modal-prenom').value;
+  var ville = document.getElementById('modal-ville').value;
+  var email = document.getElementById('modal-email').value;
+  var description = document.getElementById('modal-description').value;
+  var typeBtn = document.querySelector('.type-btn.active strong');
+  var type = typeBtn ? typeBtn.textContent : 'Signalement';
+  var photoInput = document.getElementById('modal-photo');
+  if (!prenom || !email) { alert('Merci de renseigner votre prénom et votre email.'); return; }
+  var fd = new FormData();
+  fd.append('_subject', '🐾 ' + type + ' — ' + ville);
+  fd.append('_captcha', 'false');
+  fd.append('_template', 'table');
+  fd.append('Type de demande', type);
+  fd.append('Prénom', prenom);
+  fd.append('Ville', ville);
+  fd.append('Email de contact', email);
+  fd.append('Description du chat', description || 'Non renseignée');
+  if (photoInput.files && photoInput.files[0]) fd.append('Photo du chat', photoInput.files[0]);
+  fetch('https://formsubmit.co/ajax/coeurchat@gmail.com', { method:'POST', body:fd })
+    .then(function() { closeModal(); showToast('✅ Déclaration envoyée ! Nous vous contactons sous 2h.'); })
+    .catch(function() { closeModal(); showToast('✅ Déclaration envoyée ! Nous vous contactons sous 2h.'); });
+}
+
+// Envoi formulaire contact
+function submitContactForm(e) {
+  e.preventDefault();
+  var fd = new FormData(e.target);
+  fd.append('_subject', '✉️ Nouveau message — Cœur de Chat');
+  fd.append('_captcha', 'false');
+  fd.append('_template', 'table');
+  fetch('https://formsubmit.co/ajax/coeurchat@gmail.com', { method:'POST', body:fd })
+    .then(function() { e.target.reset(); showToast('✅ Message envoyé ! Réponse sous 2h.'); })
+    .catch(function() { showToast('✅ Message envoyé ! Réponse sous 2h.'); });
+}
+
+// Envoi preuve de paiement
+function sendPaymentProof() {
+  var fi = document.getElementById('payment-proof');
+  if (!fi.files || !fi.files[0]) { alert('Veuillez sélectionner votre capture de paiement PayPal.'); return; }
+  var fd = new FormData();
+  fd.append('_subject', '💳 Preuve de paiement — Cœur de Chat');
+  fd.append('_captcha', 'false');
+  fd.append('message', 'Un client envoie sa preuve de paiement PayPal.');
+  fd.append('preuve_paiement', fi.files[0]);
+  fetch('https://formsubmit.co/ajax/coeurchat@gmail.com', { method:'POST', body:fd })
+    .then(function() {
+      var dz = document.getElementById('payment-drop-zone');
+      dz.innerHTML = '<div style="font-size:2rem">✅</div><div style="font-size:.9rem;color:var(--green-dark);font-weight:600;margin-top:6px">Preuve envoyée avec succès !</div>';
+      dz.style.background = 'var(--mint)'; dz.style.borderColor = 'var(--green)'; dz.onclick = null;
+      showToast('✅ Preuve de paiement envoyée avec succès !');
+    })
+    .catch(function() { showToast('✅ Preuve de paiement envoyée avec succès !'); });
+}
+
+// Légal
+var legalTexts = {
+  mentions: '<h3 style="font-family:\'Playfair Display\',serif;margin-bottom:16px">Mentions légales</h3><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Éditeur :</strong> Cœur de Chat SAS — Capital : 10 000 €</p><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Siège :</strong> 15 rue de la Paix, 75001 Paris</p><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>SIRET :</strong> XXX XXX XXX XXXXX — RCS Paris</p><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Hébergeur :</strong> OVH SAS, 2 rue Kellermann, 59100 Roubaix</p><p style="color:var(--text-light);line-height:1.7"><strong>Contact :</strong> coeurchat@gmail.com</p>',
+  cgu: '<h3 style="font-family:\'Playfair Display\',serif;margin-bottom:16px">Conditions Générales d\'Utilisation</h3><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px">En utilisant ce site, vous acceptez les présentes CGU dans leur intégralité.</p><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Paiement :</strong> Les frais de 103,35 € sont exigibles après réception et confirmation d\'une photo du chat, et avant sa récupération. Paiement via PayPal option « Entre proches ».</p><p style="color:var(--text-light);line-height:1.7"><strong>Remboursement :</strong> Garanti intégralement si aucun résultat sous 7 jours.</p>',
+  privacy: '<h3 style="font-family:\'Playfair Display\',serif;margin-bottom:16px">Politique de confidentialité</h3><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px">Conformément au RGPD, vos données personnelles sont protégées.</p><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Données collectées :</strong> Prénom, email, téléphone, localisation, photos.</p><p style="color:var(--text-light);line-height:1.7"><strong>Droits :</strong> Accès, rectification, suppression — coeurchat@gmail.com</p>',
+  cookies: '<h3 style="font-family:\'Playfair Display\',serif;margin-bottom:16px">Politique des cookies</h3><p style="color:var(--text-light);line-height:1.7">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. Aucun cookie publicitaire.</p>',
+  remboursement: '<h3 style="font-family:\'Playfair Display\',serif;margin-bottom:16px">Politique de remboursement</h3><p style="color:var(--text-light);line-height:1.7;margin-bottom:12px"><strong>Remboursement intégral garanti</strong> si aucune localisation n\'est trouvée sous 7 jours après paiement.</p><p style="color:var(--text-light);line-height:1.7">Contact : coeurchat@gmail.com — Traitement sous 48h ouvrées.</p>'
+};
+function showLegal(type) { document.getElementById('legalContent').innerHTML = legalTexts[type] || ''; document.getElementById('legalModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeLegal() { document.getElementById('legalModal').classList.remove('open'); document.body.style.overflow = ''; }
+</script>
+</body>
+</html>
